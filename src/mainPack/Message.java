@@ -25,6 +25,7 @@ public class Message
 
   
     public byte[] getServerResponse() {
+//        System.out.println("getter called!\n");
         return serverResponse;
     }
     

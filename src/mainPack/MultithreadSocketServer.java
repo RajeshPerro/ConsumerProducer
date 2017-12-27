@@ -7,8 +7,8 @@ package mainPack;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  *
@@ -18,7 +18,7 @@ public class MultithreadSocketServer {
     public static int counter = 0;
     public static void main(String[] args) throws Exception {
         int PortNum = 9999;
-         BlockingQueue<mainPack.Message> queue = new ArrayBlockingQueue<>(1024);
+        BlockingQueue<Message> queue = new LinkedBlockingDeque<>();;
         try {
             ServerSocket server = new ServerSocket(PortNum);
             System.out.println("Waiting for client on port " + server.getLocalPort() + "...");
@@ -32,16 +32,14 @@ public class MultithreadSocketServer {
                
                 //All thread begin here......-->>>>>>>>>>>
                 GameRules gamerul = new GameRules(serverClient, queue);
-                SenderThread sndrth = new SenderThread(serverClient, queue);
                 InteruptionTh intupth = new InteruptionTh(queue);
                 
                 Thread tgame = new Thread(gamerul);
-                Thread tsndr = new Thread(sndrth);
                 Thread tintp = new Thread(intupth);
                 
                 tgame.start();
                
-                tsndr.start();
+                //tsndr.start();
                 tintp.start();
             
             }

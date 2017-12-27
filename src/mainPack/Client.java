@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Arrays;
 
 
 /**
@@ -35,8 +36,8 @@ public class Client {
             //OutputStream socketOutStream = socket.getOutputStream();
 
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            String ClientInput = "", name = "";
-            boolean loop = true;
+            String ClientInput = "", name = "", str1="";
+            boolean loop = true; 
             while (loop) {
                 System.out.println("********--Please Follow the instruction--********\n");
                 System.out.println("**Start New Game (press 1)\n **Enter a Number (press 2)\n**Check high score (press 3)\n**End the game (type : bye)\n");
@@ -49,12 +50,14 @@ public class Client {
                     message[0] = (byte) inpNum;
                 
                 //System.out.println("Client input value : "+ClientInput+"\n");
+                
+                
                 switch (ClientInput) {
                     case "1":
                         System.out.println("Please enter the difficulty level (1 to 3)");
                         System.out.println("************Note**************");
                         System.out.println("\nif you chooose Level-1 : You have to guess num 1 - 20\n if you chooose Level-2 : You have to guess num 1 - 200\n if you chooose Level-3 : You have to guess num 1 - 2000");
-                        System.out.println("*********************************");
+                        System.out.println("------------------------------------");
                         String inputLevel;
                         inputLevel = br.readLine();
                         int level = Integer.parseInt(inputLevel);
@@ -63,10 +66,14 @@ public class Client {
                         message[3] = (byte) level;
                         outStream.write(message, 0, 4);
                         inStream.read(response, 0, 3);
-
+                        
+                        interupt(response);
                         System.out.println("\nMessage array : " + "{0} " + message[0] + " {1} " + message[1] + " {2} " + message[2] + " {3} " + message[3]);
 
                         System.out.println("\nResponse : " + "{0} " + response[0] + " {1} " + response[1] + " {2} " + response[2]);
+                        
+                       
+                
                         //if client want to start a game without finishing the running one..
                         Byte b = new Byte(response[2]);
                         int lastNumOfResponse = b.intValue();
@@ -88,6 +95,9 @@ public class Client {
 //                        System.out.println("GusInput from user : "+GusInput[i]);
 
                         inStream.read(response, 0, 3);
+                       
+                         interupt(response);
+                        
                         System.out.println("{0} " + response[0] + " {1} " + response[1] + " {2} " + response[2]);
                         switch (response[2]) {
                             case 0:
@@ -110,6 +120,9 @@ public class Client {
                                 outStream.write(NameByte);
 
                                 inStream.read(response, 0, 3);
+                                 
+                                interupt(response);
+                                
                                 System.out.println("{0} " + response[0] + " {1} " + response[1] + " {2} " + response[2]);
                                 Byte bNameRes = new Byte(response[1]);
                                 int afterGetName = bNameRes.intValue();
@@ -131,6 +144,7 @@ public class Client {
                         message[2] = 0;
                         outStream.write(message, 0, 3);
                         inStream.read(response, 0, 3);
+                        interupt(response);
                         System.out.println("{0} " + response[0] + " {1} " + response[1] + " {2} " + response[2]);
                         Byte bHighSc = new Byte(response[2]);
                         int HighScore = bHighSc.intValue();
@@ -151,6 +165,7 @@ public class Client {
                         outStream.write(message, 0, 3);
                         outStream.flush();
                         inStream.read(response, 0, 3);
+                       interupt(response);
                         System.out.println("{0} " + response[0] + " {1} " + response[1] + " {2} " + response[2]);
                         if (response[2] == 1) {
                             System.out.println(" Server Say's: GoodBye!\n ");
@@ -167,6 +182,19 @@ public class Client {
             System.out.println(e);
         }
 
+    }
+    
+    public static void  interupt(byte [] arry)
+    {
+        Byte interValuebyte = new Byte(arry[0]);
+       int InterUptCode = interValuebyte.intValue();
+       if(InterUptCode == 5)
+       {
+           System.out.println("\n+++++++++++++++++++++++++++++++++++++++++\n");
+           System.out.println("----->>>>>>Interruption------>>>>>>>\n");
+           System.out.println("Server is going to Shutdown for maintenance.\n");
+           System.out.println("++++++++++++++++++++++++++++++++++++++++++++\n");
+       }
     }
 
 }

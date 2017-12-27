@@ -15,24 +15,25 @@ import java.util.logging.Logger;
  */
 public class InteruptionTh implements Runnable {
 
-    private BlockingQueue<mainPack.Message> queue;
+    private BlockingQueue<Message> queue;
 
-    public InteruptionTh(BlockingQueue<mainPack.Message> q) {
+    public InteruptionTh(BlockingQueue<Message> q) {
         this.queue = q;
+        System.out.println("\nInterruption Thread called!\n Queue Size :"+queue.size());
     }
 
     @Override
     public void run() {
         try {
-            Thread.sleep(200);
-            while (true) {
+               Thread.sleep(2000);
                 byte [] data = {(byte)5,(byte)5,(byte)5};
                 Message msg = new Message();
                 msg.setServerResponse(data);
                 queue.put(msg);
-                Thread.sleep(200);
+                System.out.println("\nInterruption Thread Inserted!\n Queue Size :"+queue.size());
+                Thread.sleep(50000);
                 
-            }
+            
         } catch (InterruptedException ex) {
             Logger.getLogger(InteruptionTh.class.getName()).log(Level.SEVERE, null, ex);
         }
