@@ -193,8 +193,7 @@ public class GameRules implements Runnable {
         Message msg = new Message();
         msg.setServerResponse(serverResponse);
         queue.put(msg);
-        
-        System.out.println("From the Queue : " + Arrays.toString(msg.getServerResponse()));
+        //System.out.println("From the Queue : " + Arrays.toString(msg.getServerResponse()));
         SenderTh();
 
     }
