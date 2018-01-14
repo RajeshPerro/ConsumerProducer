@@ -25,13 +25,13 @@ public class InteruptionTh implements Runnable {
     @Override
     public void run() {
         try {
-               Thread.sleep(2000);
+               //Thread.sleep(200);
                 byte [] data = {(byte)5,(byte)5,(byte)5};
                 Message msg = new Message();
                 msg.setServerResponse(data);
                 queue.put(msg);
                 System.out.println("\nInterruption Thread Inserted!\n Queue Size :"+queue.size());
-                Thread.sleep(50000);
+                Thread.sleep(5000);
                 
             
         } catch (InterruptedException ex) {

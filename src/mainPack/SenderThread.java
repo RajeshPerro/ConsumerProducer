@@ -33,8 +33,8 @@ public class SenderThread implements Runnable {
             DataOutputStream outStream = new DataOutputStream(serverClient.getOutputStream());
 
             System.out.println("\nSender Thread Started!!\n");
-            Message m;
-            while (!queue.isEmpty()) {
+            Message m = null;
+            while (true) {
                 
                 if(!queue.isEmpty())
                 {
@@ -42,20 +42,27 @@ public class SenderThread implements Runnable {
                 m = queue.poll();
                 
                 outStream.write(m.getServerResponse(), 0, 3);
+                System.out.println("Data in outStream : "+outStream.size());
                 outStream.flush();
                 
-                System.out.println("Data from queue :"+ Arrays.toString(m.getServerResponse()));
+                System.out.println("Data from queue :"+ Arrays.toString(m.getServerResponse())+"\n Data Sent!");
                 
                 }
-//                
-//                else
-//                {
-//                    System.out.println("I am here! Nothing remain in Queue\n");
-//                    System.out.println("\nQueue Size :" + queue.size());
-////                    Thread.sleep(5000);
-//                }
+                //Thread.sleep(1000);
+                
+                else
+                {
+                    System.out.println(" outStream Data : "+outStream.size());
+                    outStream.write(m.getServerResponse(), 0, 3);
+                    System.out.println("I am here! Nothing remain in Queue\n");
+                    System.out.println("\nQueue Size :" + queue.size());
+                    //Thread.sleep(5000);
+                    break;
+                    
+                }
+                //break;
             }
-            Thread.sleep(5000);
+           
 
         } catch (Exception e) {
         }

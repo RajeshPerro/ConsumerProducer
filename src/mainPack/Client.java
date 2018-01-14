@@ -8,9 +8,10 @@ package mainPack;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.Arrays;
+
 
 
 /**
@@ -18,20 +19,22 @@ import java.util.Arrays;
  * @author rajesh
  */
 public class Client {
-
+ 
+    static DataInputStream inStream;
+    static byte [] response = new byte[4];
     public static void main(String[] args) {
         String address = "127.0.0.1";
         int port = 9999;
     
-        byte[] message = new byte[4],
-                response = new byte[4];
+        byte[] message = new byte[4];
+                
 
         try {
             System.out.println("Connecting to " + address + " on port " + port);
             Socket socket = new Socket(address, port);
             System.out.println("Just Connected to " + socket.getInetAddress());
 
-            DataInputStream inStream = new DataInputStream(socket.getInputStream());
+             inStream = new DataInputStream(socket.getInputStream());
             DataOutputStream outStream = new DataOutputStream(socket.getOutputStream());
             //OutputStream socketOutStream = socket.getOutputStream();
 
@@ -72,7 +75,9 @@ public class Client {
 
                         System.out.println("\nResponse : " + "{0} " + response[0] + " {1} " + response[1] + " {2} " + response[2]);
                         
-                       
+                      
+                        System.out.println("What have in 'inStream' : "+inStream.available());
+                      
                 
                         //if client want to start a game without finishing the running one..
                         Byte b = new Byte(response[2]);
@@ -165,7 +170,7 @@ public class Client {
                         outStream.write(message, 0, 3);
                         outStream.flush();
                         inStream.read(response, 0, 3);
-                       interupt(response);
+                        interupt(response);
                         System.out.println("{0} " + response[0] + " {1} " + response[1] + " {2} " + response[2]);
                         if (response[2] == 1) {
                             System.out.println(" Server Say's: GoodBye!\n ");
@@ -184,7 +189,7 @@ public class Client {
 
     }
     
-    public static void  interupt(byte [] arry)
+    public static void  interupt(byte [] arry) throws IOException
     {
         Byte interValuebyte = new Byte(arry[0]);
        int InterUptCode = interValuebyte.intValue();
@@ -195,6 +200,8 @@ public class Client {
            System.out.println("Server is going to Shutdown for maintenance.\n");
            System.out.println("++++++++++++++++++++++++++++++++++++++++++++\n");
        }
+       inStream.read(response);
+       System.out.println("\nResponse : " + "{0} " + response[0] + " {1} " + response[1] + " {2} " + response[2]);
     }
 
 }

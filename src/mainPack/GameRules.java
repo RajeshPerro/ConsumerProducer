@@ -158,7 +158,7 @@ public class GameRules implements Runnable {
             System.out.println("-->>>One Client exit!!-->>>> ");
             try {
                 mutex.acquire();
-                counter--;
+                counter=counter-1;
                 mutex.release();
             }catch (InterruptedException ex) {
                 Logger.getLogger(GameRules.class.getName()).log(Level.SEVERE, null, ex);
@@ -184,6 +184,7 @@ public class GameRules implements Runnable {
     }
 
     public void setMsg(byte a, byte b, byte c) throws InterruptedException {
+        SenderTh();
         serverResponse = new byte[3];
 
         serverResponse[0] = a;
@@ -194,7 +195,7 @@ public class GameRules implements Runnable {
         msg.setServerResponse(serverResponse);
         queue.put(msg);
         //System.out.println("From the Queue : " + Arrays.toString(msg.getServerResponse()));
-        SenderTh();
+        
 
     }
 
